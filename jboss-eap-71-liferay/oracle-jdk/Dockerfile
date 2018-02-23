@@ -12,17 +12,17 @@
 # --build-arg LIFERAY_FIX_PACK="http://<<YOUR_PACKAGE_REPOSITORY>>/liferay-fix-pack-de-39-7010.zip" \
 # -t liferay/dxp-jboss-eap71:oraclejdk . 
 #
-FROM liferay/jboss-eap-base:71
+FROM openshift/jboss-eap71-openshift:1.1
 MAINTAINER Andre Fabbro <andre.fabbro@liferay.com>
 
-ARG LIFERAY_PACKAGE_URL
-ARG	LIFERAY_DEPENDENCIES_URL
-ARG	LIFERAY_LICENSE_URL
-ARG	LIFERAY_PATCHING_TOOL_URL
-ARG	LIFERAY_OSGI_URL
-ARG	LIFERAY_TOOLS_URL
-ARG LIFERAY_WORK_URL
-ARG	LIFERAY_FIX_PACK
+ARG LIFERAY_PACKAGE_URL="https://www.dropbox.com/s/6upzpb65yux47yx/liferay-dxp-digital-enterprise-7.0-sp6-20171010144253003.war" 
+ARG LIFERAY_DEPENDENCIES_URL="https://www.dropbox.com/s/yckr7dm5fvco1ap/digital-enterprise-dependencies-7.0-sp6-20171010144253003.zip" 
+ARG LIFERAY_LICENSE_URL="https://www.dropbox.com/s/lsbudgn6id6q3a7/activation-key-development.xml" 
+ARG LIFERAY_PATCHING_TOOL_URL="https://www.dropbox.com/s/cr74fpkrldteiv4/patching-tool-2.0.7.zip" 
+ARG LIFERAY_OSGI_URL="https://www.dropbox.com/s/7kbclphwwqoxvot/liferay-dxp-digital-enterprise-osgi-7.0-sp6-20171010144253003.zip" 
+ARG LIFERAY_TOOLS_URL="https://www.dropbox.com/s/iryp0tkx8agnmgm/liferay-dxp-digital-enterprise-tools-7.0-sp6-20171010144253003.zip" 
+ARG LIFERAY_WORK_URL="https://www.dropbox.com/s/4wifup8eorhj8sv/liferay-dxp-digital-enterprise-work-7.0-sp6-20171010144253003.zip" 
+ARG LIFERAY_FIX_PACK="https://www.dropbox.com/s/89bltax5687p8k8/liferay-fix-pack-de-39-7010.zip"
 
 ENV JAVA_HOME="/usr/java/jdk1.8.0_161" \
 	JAVA_VENDOR="oracle" \
@@ -31,6 +31,16 @@ ENV JAVA_HOME="/usr/java/jdk1.8.0_161" \
 WORKDIR /tmp
 
 USER root
+
+RUN yum update -y && \
+	yum install -y wget augeas telnet && \
+	wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-linux-x64.rpm && \
+	yum localinstall -y jdk-8u161-linux-x64.rpm && \
+	rm -f jdk-8u161-linux-x64.rpm && \
+	rm -rf /var/cache/yum
+	
+RUN alternatives --set java /usr/java/jdk1.8.0_161/jre/bin/java && \
+	alternatives --set javac /usr/java/jdk1.8.0_161/bin/javac
 
 RUN rm -rf /tmp/* \
 	&& chown jboss:root /opt \

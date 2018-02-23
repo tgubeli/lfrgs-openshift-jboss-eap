@@ -12,24 +12,23 @@
 # --build-arg LIFERAY_FIX_PACK="http://<<YOUR_PACKAGE_REPOSITORY>>/liferay-fix-pack-de-39-7010.zip" \
 # -t liferay/dxp-jboss-eap71:openjdk . 
 #
-FROM registry.access.redhat.com/jboss-eap-7/eap71-openshift
+FROM openshift/jboss-eap71-openshift:1.1
 MAINTAINER Andre Fabbro <andre.fabbro@liferay.com>
 
-ARG LIFERAY_PACKAGE_URL
-ARG	LIFERAY_DEPENDENCIES_URL
-ARG	LIFERAY_LICENSE_URL
-ARG	LIFERAY_PATCHING_TOOL_URL
-ARG	LIFERAY_OSGI_URL
-ARG	LIFERAY_TOOLS_URL
-ARG LIFERAY_WORK_URL
-ARG	LIFERAY_FIX_PACK
+ARG LIFERAY_PACKAGE_URL="https://www.dropbox.com/s/6upzpb65yux47yx/liferay-dxp-digital-enterprise-7.0-sp6-20171010144253003.war" 
+ARG LIFERAY_DEPENDENCIES_URL="https://www.dropbox.com/s/yckr7dm5fvco1ap/digital-enterprise-dependencies-7.0-sp6-20171010144253003.zip" 
+ARG LIFERAY_LICENSE_URL="https://www.dropbox.com/s/lsbudgn6id6q3a7/activation-key-development.xml" 
+ARG LIFERAY_PATCHING_TOOL_URL="https://www.dropbox.com/s/cr74fpkrldteiv4/patching-tool-2.0.7.zip" 
+ARG LIFERAY_OSGI_URL="https://www.dropbox.com/s/7kbclphwwqoxvot/liferay-dxp-digital-enterprise-osgi-7.0-sp6-20171010144253003.zip" 
+ARG LIFERAY_TOOLS_URL="https://www.dropbox.com/s/iryp0tkx8agnmgm/liferay-dxp-digital-enterprise-tools-7.0-sp6-20171010144253003.zip" 
+ARG LIFERAY_WORK_URL="https://www.dropbox.com/s/4wifup8eorhj8sv/liferay-dxp-digital-enterprise-work-7.0-sp6-20171010144253003.zip" 
+ARG LIFERAY_FIX_PACK="https://www.dropbox.com/s/89bltax5687p8k8/liferay-fix-pack-de-39-7010.zip"
 
 WORKDIR /tmp
 
 USER root
 
 RUN rm -rf /tmp/* \
-	&& yum install -y wget augeas telnet \
 	&& chown jboss:root /opt \
 	&& touch /opt/.liferay-home \
 	&& chown jboss:root /opt/.liferay-home \

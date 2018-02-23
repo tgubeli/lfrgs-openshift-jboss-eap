@@ -29,6 +29,7 @@ WORKDIR /tmp
 USER root
 
 RUN rm -rf /tmp/* \
+	&& yum install -y wget augeas telnet \
 	&& chown jboss:root /opt \
 	&& touch /opt/.liferay-home \
 	&& chown jboss:root /opt/.liferay-home \
